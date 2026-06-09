@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.22.1)
+project(mobileapp)
+
+set(NATIVE_APP_GLUE_DIR
+    ${ANDROID_NDK}/sources/android/native_app_glue)
+
+add_library(mobileapp SHARED
+    app/src/main/cpp/main.cpp
+    app/src/main/cpp/Shader/ShaderClass.cpp
+    app/src/main/cpp/VAOClass/VAOClass.cpp
+    app/src/main/cpp/VBOClass/VBOClass.cpp
+    app/src/main/cpp/EBOClass/EBOClass.cpp
+    app/src/main/cpp/SquareClass/SquareClass.cpp
+    app/src/main/cpp/ScreenClass/ScreenClass.cpp
+    app/src/main/cpp/ObjectClass/ObjectClass.cpp
+    app/src/main/cpp/libs/stb_image.cpp
+    ${NATIVE_APP_GLUE_DIR}/android_native_app_glue.c
+)
+
+target_include_directories(mobileapp PRIVATE
+    ${NATIVE_APP_GLUE_DIR}
+    app/src/main/cpp/Shader
+    app/src/main/cpp/VAOClass
+    app/src/main/cpp/VBOClass
+    app/src/main/cpp/EBOClass
+)
+
+target_link_libraries(mobileapp
+    android
+    log
+    EGL
+    GLESv3
+)

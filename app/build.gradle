@@ -1,0 +1,27 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdk 34
+    namespace "com.mobileapp.app"
+
+    defaultConfig {
+        applicationId "com.mobileapp.app"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            cmake {
+                abiFilters 'arm64-v8a'
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "../CMakeLists.txt"
+            version "3.22.1"
+        }
+    }
+}

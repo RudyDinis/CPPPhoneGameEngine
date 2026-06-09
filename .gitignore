@@ -1,0 +1,20 @@
+# Build Android
+app/build/
+build/
+
+# Local config (spécifique à ta machine)
+local.properties
+
+# Gradle cache
+.gradle/
+
+# IDE
+.idea/
+*.iml
+
+# NDK / CMake generated
+app/.cxx/
+
+# Keystore si tu en as un
+*.jks
+*.keystore
