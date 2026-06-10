@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:40 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 15:08:33 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:14:52 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "../ObjectClass/ObjectClass.hpp"
 #include "../TextClass/TextClass.hpp"
 #include "../ScreenClass/ScreenClass.hpp"
+#include "../CameraClass/CameraClass.hpp"
 
 typedef struct s_text_value
 {
@@ -35,7 +36,10 @@ private:
 	Text * text;
 	std::map<std::string, s_text_value> TextData;
 	Screen *screen;
+protected:
+	Camera *camera;
 	bool canMoove = false;
+	
 public:
 	Scene(Screen *screen);
 	void addObject(Object *);
@@ -46,6 +50,8 @@ public:
 
 	bool getCanMoove();
 	void setCanMoove(bool);
+
+	Camera *getCamera();
 	
 	void render();
 	~Scene();

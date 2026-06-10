@@ -6,9 +6,9 @@ layout (location = 2) in vec2 aTex;
 out vec4 color;
 out vec2 texCoord;
 
-uniform float uAspect;
+uniform vec2 uOffset;
 void main() { 
-	gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+	gl_Position = vec4(aPos.x + uOffset.x, aPos.y + uOffset.y, aPos.z, 1.0);
 	color = aColor;	
 	texCoord = aTex;
 }

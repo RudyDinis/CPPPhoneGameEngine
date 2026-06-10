@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 19:07:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 11:37:54 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:51:12 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 
 int clicked = 0;
 Scene *selected_scene = nullptr;
+HomeScene *homeScene = nullptr;
+HomeScene *test = nullptr;
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd)
 {
@@ -44,22 +46,66 @@ static void handle_app_cmd(struct android_app *app, int32_t cmd)
 
 static int32_t handle_input(struct android_app *app, AInputEvent *event)
 {
-    if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION)
-    {
+	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION)
+	{
+
+		static float last_x = 0.0f;
+		static float last_y = 0.0f;
+		static float dist_min = 10.0f;
+		static bool hasMoved = false;
 		int32_t action = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
 
 		if (action == AMOTION_EVENT_ACTION_DOWN)
 		{
-        	float x = AMotionEvent_getX(event, 0);
-        	float y = AMotionEvent_getY(event, 0);
-			for (auto &object : selected_scene->getObject())
+			float x = AMotionEvent_getX(event, 0);
+			float y = AMotionEvent_getY(event, 0);
+			last_x = x;
+			last_y = y;
+			hasMoved = false;
+		}
+
+		if (action == AMOTION_EVENT_ACTION_MOVE)
+		{
+			float x = AMotionEvent_getX(event, 0);
+			float y = AMotionEvent_getY(event, 0);
+
+			float dx = x - last_x;
+			float dy = y - last_y;
+
+			if (!hasMoved && (dx * dx + dy * dy) > dist_min * dist_min)
 			{
-				object->isTouched(x, y);
+				hasMoved = true;
+			}
+
+			if (hasMoved)
+			{
+				*selected_scene->getCamera()->getOffset_x() += dx;
+				*selected_scene->getCamera()->getOffset_y() -= dy;
+				last_x = x;
+				last_y = y;
+				__android_log_print(ANDROID_LOG_INFO, "DEBUG", "SLIDEEEEEEEEEEEEEEEEEEEE");
+			}
+		}
+
+		if (action == AMOTION_EVENT_ACTION_UP)
+		{
+			if (!hasMoved)
+			{
+				float x = AMotionEvent_getX(event, 0);
+				float y = AMotionEvent_getY(event, 0);
+
+				for (auto &object : selected_scene->getObject())
+				{
+					if (object->isTouched(x, y))
+					{
+						selected_scene = test;
+					}
+				}
 			}
 		}
 		return 1; // consommé
 	}
-    return 0;
+	return 0;
 }
 
 void android_main(struct android_app *app)
@@ -67,7 +113,6 @@ void android_main(struct android_app *app)
 	AAssetManager *mgr = app->activity->assetManager;
 
 	Screen screen(app);
-	HomeScene *homeScene = nullptr;
 
 	float aspect = 0.0;
 
@@ -94,8 +139,10 @@ void android_main(struct android_app *app)
 				glViewport(0, 0, screen.width(), screen.height());
 
 				homeScene = new HomeScene("HomeScene", mgr, &screen);
+				test = new HomeScene("testScene", mgr, &screen);
+
 				selected_scene = homeScene;
-				
+
 				surfaceReady = true;
 			}
 			if (app->destroyRequested)

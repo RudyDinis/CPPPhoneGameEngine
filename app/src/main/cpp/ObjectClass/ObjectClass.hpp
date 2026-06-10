@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:14 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 18:45:45 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:55:03 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@ private:
 	int y2;
 	bool visible;
 	std::string name;
+	bool mobile;
 public:
-	Object(std::string, int, int, int, int, AAssetManager*, Screen *,const char*);
-	void Show();
+	Object(std::string, float, float, float, float, AAssetManager*, Screen *,const char*, bool mobile);
+	void Show(float, float);
 	int isTouched(float x, float y);
 	std::string getName();
 	bool getVisibility();

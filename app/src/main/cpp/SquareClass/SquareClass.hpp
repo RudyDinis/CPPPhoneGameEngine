@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:16 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 17:00:07 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:17:44 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ private:
 	EBO *EBO1 = nullptr;
 	GLuint _texture;
 public:
-	Square(int, int, int, int, s_rgba, AAssetManager*, Screen *, const char*);
+	Square(float, float, float, float, s_rgba, AAssetManager*, Screen *, const char*);
 	Shader *getShader();
 	VAO *getVAO();
 	VBO *getVBO();

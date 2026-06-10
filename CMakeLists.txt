@@ -16,6 +16,7 @@ add_library(mobileapp SHARED
     app/src/main/cpp/SceneClass/SceneClass.cpp
     app/src/main/cpp/HomeSceneClass/HomeSceneClass.cpp
     app/src/main/cpp/TextClass/TextClass.cpp
+    app/src/main/cpp/CameraClass/CameraClass.cpp
     app/src/main/cpp/libs/stb_image.cpp
     app/src/main/cpp/libs/stb_truetype.cpp
     ${NATIVE_APP_GLUE_DIR}/android_native_app_glue.c

@@ -6,16 +6,15 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:44 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 15:11:22 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:51:45 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SceneClass.hpp"
 
 Scene::Scene(Screen *screen)
-	: screen(screen), text(new Text())
+	: screen(screen), text(new Text()), camera(new Camera())
 {
-	
 }
 
 void Scene::addObject(Object *obj)
@@ -25,14 +24,13 @@ void Scene::addObject(Object *obj)
 
 Text *Scene::getText()
 {
-	return (this->text);	
+	return (this->text);
 }
 
 void Scene::addText(std::string name, s_text_value value)
 {
 	this->TextData.insert({name, value});
 }
-
 
 std::vector<Object *> Scene::getObject()
 {
@@ -53,7 +51,9 @@ void Scene::render()
 {
 	for (auto &object : this->Objects)
 	{
-		object->Show();
+		float ox = *this->camera->getOffset_x() / this->screen->width() * 2.0f;
+		float oy = *this->camera->getOffset_y() / this->screen->height() * 2.0f;
+		object->Show(ox, oy);
 	}
 
 	glm::mat4 proj = glm::ortho(0.0f, (float)this->screen->width(),
@@ -68,6 +68,11 @@ void Scene::render()
 	}
 }
 
+Camera *Scene::getCamera()
+{
+	return (this->camera);
+}
+
 Scene::~Scene()
 {
 	for (auto &object : this->Objects)
@@ -76,4 +81,5 @@ Scene::~Scene()
 	}
 
 	delete text;
+	delete camera;
 }

@@ -6,20 +6,20 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:23 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 17:00:01 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:17:16 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SquareClass.hpp"
 #include "../libs/stb_image.h"
 
-Square::Square(int x1, int x2, int y1, int y2, s_rgba rgba, AAssetManager *mgr, Screen *screen, const char* texture)
+Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManager *mgr, Screen *screen, const char* texture)
 {
 
-	float left = ((float)x1 / (float)screen->width()) * 2.0f - 1.0f;
-	float right = ((float)x2 / (float)screen->width()) * 2.0f - 1.0f;
-	float bottom = 1.0f - ((float)y2 / (float)screen->height()) * 2.0f;
-	float top = 1.0f - ((float)y1 / (float)screen->height()) * 2.0f;
+	float left = (x1 / (float)screen->width()) * 2.0f - 1.0f;
+	float right = (x2 / (float)screen->width()) * 2.0f - 1.0f;
+	float bottom = 1.0f - (y2 / (float)screen->height()) * 2.0f;
+	float top = 1.0f - (y1 / (float)screen->height()) * 2.0f;
 
 	float r = rgba.r / 255.0f;
 	float g = rgba.g / 255.0f;

@@ -6,13 +6,13 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 15:17:21 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 16:56:14 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ObjectClass.hpp"
 
-Object::Object(std::string name, int x1, int x2, int y1, int y2, AAssetManager *mgr, Screen *screen, const char *texture)
+Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetManager *mgr, Screen *screen, const char *texture, bool mobile)
 {
 	this->square = new Square(x1, x2, y1, y2, {255, 0, 0, 255}, mgr, screen, texture);
 	this->x1 = x1;
@@ -21,13 +21,19 @@ Object::Object(std::string name, int x1, int x2, int y1, int y2, AAssetManager *
 	this->y2 = y2;
 	this->visible = true;
 	this->name = name;
+	this->mobile = mobile;
 }
 
-void Object::Show()
+void Object::Show(float offset_x, float offset_y)
 {
-	if (!this->visible)
-		return;
 	this->square->getShader()->Activate();
+	
+	GLint offsetLoc = glGetUniformLocation(this->square->getShader()->ID, "uOffset");
+
+	if (this->mobile)
+		glUniform2f(offsetLoc, offset_x, offset_y);
+	else
+		glUniform2f(offsetLoc, 0.0f, 0.0f);
 	glBindTexture(GL_TEXTURE_2D, this->square->getTexture());
 	this->square->getVAO()->Bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
