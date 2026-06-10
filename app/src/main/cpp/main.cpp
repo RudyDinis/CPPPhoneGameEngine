@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 19:07:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 18:45:54 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 11:37:54 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@
 #include "VBOClass/VBOClass.hpp"
 #include "ScreenClass/ScreenClass.hpp"
 #include "ObjectClass/ObjectClass.hpp"
-
-std::vector<Object *> Objects;
+#include "HomeSceneClass/HomeSceneClass.hpp"
 
 int clicked = 0;
+Scene *selected_scene = nullptr;
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd)
 {
@@ -52,18 +52,10 @@ static int32_t handle_input(struct android_app *app, AInputEvent *event)
 		{
         	float x = AMotionEvent_getX(event, 0);
         	float y = AMotionEvent_getY(event, 0);
-			for (auto &object : Objects)
-				if (object->isTouched(x, y) && object->getName() == "topleft")
-				{
-					if (Objects[1]->getVisibility())
-					{
-						Objects[1]->setVisible(false);
-					}
-					else 
-					{
-						Objects[1]->setVisible(true);
-					}
-				}
+			for (auto &object : selected_scene->getObject())
+			{
+				object->isTouched(x, y);
+			}
 		}
 		return 1; // consommé
 	}
@@ -75,8 +67,7 @@ void android_main(struct android_app *app)
 	AAssetManager *mgr = app->activity->assetManager;
 
 	Screen screen(app);
-	Object *square = nullptr;
-	Object *square1 = nullptr;
+	HomeScene *homeScene = nullptr;
 
 	float aspect = 0.0;
 
@@ -102,11 +93,8 @@ void android_main(struct android_app *app)
 
 				glViewport(0, 0, screen.width(), screen.height());
 
-				square = new Object("topleft", 0, 200, 0, 200, mgr, &screen, "textures/coin.png");
-				Objects.push_back(square);
-
-				square1 = new Object("idk", 200, 400, 200, 400, mgr, &screen, "textures/coin.png");
-				Objects.push_back(square1);
+				homeScene = new HomeScene("HomeScene", mgr, &screen);
+				selected_scene = homeScene;
 				
 				surfaceReady = true;
 			}
@@ -119,8 +107,7 @@ void android_main(struct android_app *app)
 			glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			square->Show();
-			square1->Show();
+			selected_scene->render();
 
 			eglSwapBuffers(screen.getDisplay(), surface);
 		}

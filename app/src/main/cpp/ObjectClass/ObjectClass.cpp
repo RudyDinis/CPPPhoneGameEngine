@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 18:45:51 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 15:17:21 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void Object::Show()
 {
 	if (!this->visible)
 		return;
+	this->square->getShader()->Activate();
 	glBindTexture(GL_TEXTURE_2D, this->square->getTexture());
 	this->square->getVAO()->Bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
