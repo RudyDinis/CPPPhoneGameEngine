@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 16:56:14 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/10 17:49:55 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,32 @@ Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetM
 	this->visible = true;
 	this->name = name;
 	this->mobile = mobile;
+	this->screen = screen;
 }
 
-void Object::Show(float offset_x, float offset_y)
+void Object::Show(float offset_x, float offset_y, float x, float y)
 {
 	this->square->getShader()->Activate();
 	
 	GLint offsetLoc = glGetUniformLocation(this->square->getShader()->ID, "uOffset");
 
 	if (this->mobile)
+	{
 		glUniform2f(offsetLoc, offset_x, offset_y);
+		this->x1f = this->x1 + x;
+		this->x2f = this->x2 + x;
+		this->y1f = this->y1 + -y;
+		this->y2f = this->y2 + -y;
+	}
 	else
+	{
 		glUniform2f(offsetLoc, 0.0f, 0.0f);
+		this->x1f = this->x1 + 0.0;
+		this->x2f = this->x2 + 0.0;
+		this->y1f = this->y1 + 0.0;
+		this->y2f = this->y2 + 0.0;
+	}
+
 	glBindTexture(GL_TEXTURE_2D, this->square->getTexture());
 	this->square->getVAO()->Bind();
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -43,7 +57,7 @@ int Object::isTouched(float x, float y)
 {
 	if (!this->visible)
 		return 0;
-	if ((x > this->x1 && x < this->x2) && (y > this->y1 && y < this->y2))
+	if ((x > this->x1f && x < this->x2f) && (y > this->y1f && y < this->y2f))
 	{
 		__android_log_print(ANDROID_LOG_INFO, "DEBUG", "TOUCH x=%f y=%f %s", x, y, this->name.c_str());
 		return 1;
