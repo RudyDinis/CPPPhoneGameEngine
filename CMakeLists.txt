@@ -15,6 +15,9 @@ add_library(mobileapp SHARED
     app/src/main/cpp/ObjectClass/ObjectClass.cpp
     app/src/main/cpp/SceneClass/SceneClass.cpp
     app/src/main/cpp/HomeSceneClass/HomeSceneClass.cpp
+    app/src/main/cpp/GameSceneClass/GameSceneClass.cpp
+    app/src/main/cpp/ResourceManagerClass/ResourceManager.cpp
+    app/src/main/cpp/MapClass/MapClass.cpp
     app/src/main/cpp/TextClass/TextClass.cpp
     app/src/main/cpp/CameraClass/CameraClass.cpp
     app/src/main/cpp/libs/stb_image.cpp

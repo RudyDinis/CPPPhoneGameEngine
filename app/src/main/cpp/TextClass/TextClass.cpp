@@ -164,7 +164,6 @@ void Text::drawText(std::string name, const char *text, float x, float y,
 	}
 
 	glBindVertexArray(0);
-	glDisable(GL_BLEND);
 }
 
 Text::Text()

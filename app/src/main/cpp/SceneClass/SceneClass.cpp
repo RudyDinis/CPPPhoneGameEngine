@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:44 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 17:48:06 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 13:26:28 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void Scene::render()
 {
 	float ox = *this->camera->getOffset_x() / this->screen->width() * 2.0f;
 	float oy = *this->camera->getOffset_y() / this->screen->height() * 2.0f;
-	
+
 	for (auto &object : this->Objects)
 	{
-		object->Show(ox, oy ,*this->camera->getOffset_x(), *this->camera->getOffset_y());
+		object->Show(ox, oy, *this->camera->getOffset_x(), *this->camera->getOffset_y(), *this->camera->getZoom());
 	}
 
 	glm::mat4 proj = glm::ortho(0.0f, (float)this->screen->width(),
@@ -63,9 +63,14 @@ void Scene::render()
 
 	for (auto &textData : this->TextData)
 	{
-		this->text->drawText(textData.second.font, textData.first.c_str(), textData.second.x + *this->camera->getOffset_x(), textData.second.y + -(*this->camera->getOffset_y()),
-							 textData.second.r, textData.second.g, textData.second.b, textData.second.a,
-							 proj);
+		if (textData.second.movable)
+			this->text->drawText(textData.second.font, textData.first.c_str(), textData.second.x + *this->camera->getOffset_x(), textData.second.y + -(*this->camera->getOffset_y()),
+								 textData.second.r, textData.second.g, textData.second.b, textData.second.a,
+								 proj);
+		else
+			this->text->drawText(textData.second.font, textData.first.c_str(), textData.second.x, textData.second.y,
+								 textData.second.r, textData.second.g, textData.second.b, textData.second.a,
+								 proj);
 	}
 }
 

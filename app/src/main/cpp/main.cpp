@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 19:07:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 17:40:19 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 17:15:32 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@
 #include "ScreenClass/ScreenClass.hpp"
 #include "ObjectClass/ObjectClass.hpp"
 #include "HomeSceneClass/HomeSceneClass.hpp"
+#include "GameSceneClass/GameSceneClass.hpp"
+#include "ResourceManagerClass/ResourceManager.hpp"
 
 int clicked = 0;
 Scene *selected_scene = nullptr;
 HomeScene *homeScene = nullptr;
-HomeScene *test = nullptr;
+GameScene *gameScene = nullptr;
+ResourceManager *resourceManager = new ResourceManager();
+
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd)
 {
@@ -44,6 +48,17 @@ static void handle_app_cmd(struct android_app *app, int32_t cmd)
 	}
 }
 
+float getPinchDistance(AInputEvent *event)
+{
+	float x0 = AMotionEvent_getX(event, 0);
+	float y0 = AMotionEvent_getY(event, 0);
+	float x1 = AMotionEvent_getX(event, 1);
+	float y1 = AMotionEvent_getY(event, 1);
+	float dx = x1 - x0;
+	float dy = y1 - y0;
+	return sqrt(dx * dx + dy * dy);
+}
+
 static int32_t handle_input(struct android_app *app, AInputEvent *event)
 {
 	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION)
@@ -53,7 +68,11 @@ static int32_t handle_input(struct android_app *app, AInputEvent *event)
 		static float last_y = 0.0f;
 		static float dist_min = 10.0f;
 		static bool hasMoved = false;
+		static float lastPinchDist = 0.0f;
+		static bool isPinching = false;
+
 		int32_t action = AMotionEvent_getAction(event) & AMOTION_EVENT_ACTION_MASK;
+		int32_t pointerCount = AMotionEvent_getPointerCount(event);
 
 		if (action == AMOTION_EVENT_ACTION_DOWN)
 		{
@@ -64,27 +83,18 @@ static int32_t handle_input(struct android_app *app, AInputEvent *event)
 			hasMoved = false;
 		}
 
-		if (action == AMOTION_EVENT_ACTION_MOVE)
+		if (action == AMOTION_EVENT_ACTION_POINTER_DOWN && pointerCount == 2)
 		{
-			float x = AMotionEvent_getX(event, 0);
-			float y = AMotionEvent_getY(event, 0);
+			lastPinchDist = getPinchDistance(event);
+			isPinching = true;
+		}
 
-			float dx = x - last_x;
-			float dy = y - last_y;
-
-			if (!hasMoved && (dx * dx + dy * dy) > dist_min * dist_min)
-			{
-				hasMoved = true;
-			}
-
-			if (hasMoved)
-			{
-				*selected_scene->getCamera()->getOffset_x() += dx;
-				*selected_scene->getCamera()->getOffset_y() -= dy;
-				last_x = x;
-				last_y = y;
-				__android_log_print(ANDROID_LOG_INFO, "DEBUG", "SLIDEEEEEEEEEEEEEEEEEEEE");
-			}
+		if (action == AMOTION_EVENT_ACTION_POINTER_UP)
+		{
+			lastPinchDist = 0.0f;
+			hasMoved = true;
+			last_x = AMotionEvent_getX(event, 0);
+			last_y = AMotionEvent_getY(event, 0);
 		}
 
 		if (action == AMOTION_EVENT_ACTION_UP)
@@ -98,9 +108,58 @@ static int32_t handle_input(struct android_app *app, AInputEvent *event)
 				{
 					if (object->isTouched(x, y))
 					{
-						selected_scene = test;
+						if (object->getName() == "idk")
+						{
+							selected_scene = gameScene;
+							gameScene->load();
+						}
+						else
+							selected_scene = homeScene;
 					}
 				}
+			}
+
+			hasMoved = false;
+			isPinching = false;
+		}
+
+		if (action == AMOTION_EVENT_ACTION_MOVE)
+		{
+			if (pointerCount == 1 && !isPinching)
+			{
+				float x = AMotionEvent_getX(event, 0);
+				float y = AMotionEvent_getY(event, 0);
+
+				float dx = x - last_x;
+				float dy = y - last_y;
+
+				if (!hasMoved && (dx * dx + dy * dy) > dist_min * dist_min)
+				{
+					hasMoved = true;
+				}
+
+				if (hasMoved)
+				{
+					*selected_scene->getCamera()->getOffset_x() += dx;
+					*selected_scene->getCamera()->getOffset_y() -= dy;
+					last_x = x;
+					last_y = y;
+				}
+			}
+			else if (pointerCount == 2)
+			{
+				float newDist = getPinchDistance(event);
+				if (lastPinchDist > 0.0f)
+				{
+					float scale = newDist / lastPinchDist;
+					if (*selected_scene->getCamera()->getZoom() * scale <= 0.5)
+						*selected_scene->getCamera()->getZoom() = 0.5;
+					else if (*selected_scene->getCamera()->getZoom() * scale >= 2.5)
+						*selected_scene->getCamera()->getZoom() = 2.5;
+					else
+						*selected_scene->getCamera()->getZoom() *= scale;
+				}
+				lastPinchDist = newDist;
 			}
 		}
 		return 1; // consommé
@@ -137,9 +196,9 @@ void android_main(struct android_app *app)
 				eglMakeCurrent(screen.getDisplay(), surface, surface, screen.getContext());
 
 				glViewport(0, 0, screen.width(), screen.height());
-
-				homeScene = new HomeScene("HomeScene", mgr, &screen);
-				test = new HomeScene("testScene", mgr, &screen);
+				resourceManager->loadShader(mgr, "default", "shaders/default.vert", "shaders/default.frag");
+				homeScene = new HomeScene("HomeScene", mgr, &screen, resourceManager);
+				gameScene = new GameScene("gameScene", mgr, &screen, resourceManager);
 
 				selected_scene = homeScene;
 
@@ -151,6 +210,8 @@ void android_main(struct android_app *app)
 
 		if (surfaceReady)
 		{
+			GLboolean blendEnabled;
+			glGetBooleanv(GL_BLEND, &blendEnabled);
 			glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 

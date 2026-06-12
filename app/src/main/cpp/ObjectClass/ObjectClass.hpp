@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:14 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 17:48:36 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 17:21:38 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #define OBJECTCLASS_HPP
 
 #include "../SquareClass/SquareClass.hpp"
+#include "../ResourceManagerClass/ResourceManager.hpp"
+
 #include <string>
 #include <android/log.h>
 
@@ -35,8 +37,8 @@ private:
 	Screen *screen;
 	bool mobile;
 public:
-	Object(std::string, float, float, float, float, AAssetManager*, Screen *,const char*, bool mobile);
-	void Show(float, float, float, float);
+	Object(std::string, float, float, float, float, AAssetManager*, Screen *,const char*, const char*, bool mobile, ResourceManager *resourceManager);
+	void Show(float, float, float, float, float);
 	int isTouched(float x, float y);
 	std::string getName();
 	bool getVisibility();

@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:16 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 16:17:44 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 17:22:36 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,14 @@
 
 #include <GLES3/gl3.h>
 #include <android/asset_manager.h>
+#include <android/log.h>
 
 #include "../EBOClass/EBOClass.hpp"
 #include "../Shader/ShaderClass.hpp"
 #include "../VAOClass/VAOClass.hpp"
 #include "../VBOClass/VBOClass.hpp"
 #include "../ScreenClass/ScreenClass.hpp"
+#include "../ResourceManagerClass/ResourceManager.hpp"
 
 typedef struct t_rgba
 {
@@ -40,7 +42,7 @@ private:
 	EBO *EBO1 = nullptr;
 	GLuint _texture;
 public:
-	Square(float, float, float, float, s_rgba, AAssetManager*, Screen *, const char*);
+	Square(float, float, float, float, s_rgba, AAssetManager*, Screen *, ResourceManager *resourceManager, const char*, const char*);
 	Shader *getShader();
 	VAO *getVAO();
 	VBO *getVBO();

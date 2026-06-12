@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HomeSceneClass.hpp                                 :+:      :+:    :+:   */
+/*   GameSceneClass.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:07:03 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 16:26:51 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 16:45:52 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HOMESCENECLASS_HPP
-#define HOMESCENECLASS_HPP
+#ifndef GAMESCENECLASS_HPP
+#define GAMESCENECLASS_HPP
+
+#include <GLES3/gl3.h>
+#include <android/asset_manager.h>
+#include <android/log.h>
 
 #include "../SceneClass/SceneClass.hpp"
 #include "../ObjectClass/ObjectClass.hpp"
+#include "../MapClass/MapClass.hpp"
 #include "../ResourceManagerClass/ResourceManager.hpp"
 
-class HomeScene : public Scene
+class GameScene : public Scene
 {
 private:
 	std::string name;
 	AAssetManager *mgr;
 	Screen *screen;
+	Map *map;
+	ResourceManager *resourceManager;
 public:
-	HomeScene(std::string, AAssetManager*, Screen *, ResourceManager *resourceManager);
-	~HomeScene();
+	GameScene(std::string, AAssetManager*, Screen *, ResourceManager *resourceManager);
+	void load();
+	~GameScene();
 };
 
 #endif

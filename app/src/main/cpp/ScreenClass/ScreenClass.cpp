@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:47:38 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/09 16:24:22 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 12:10:19 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ Screen::Screen(android_app *App)
 		EGL_BLUE_SIZE, 8,
 		EGL_GREEN_SIZE, 8,
 		EGL_RED_SIZE, 8,
+		EGL_ALPHA_SIZE, 8,
 		EGL_NONE};
 
 	eglChooseConfig(this->_display, attribs, &this->_config, 1, &this->_numConfigs);

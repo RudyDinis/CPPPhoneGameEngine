@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:40 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/10 16:14:52 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 15:49:52 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_text_value
 	const char *font;
     float x, y;
     float r, g, b, a;
+	bool movable;
 } t_text_value;
 
 
