@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 17:52:28 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 18:07:37 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void Object::Show(float offset_x, float offset_y, float x, float y, float zoom)
 
 	GLint offsetLoc = glGetUniformLocation(this->square->getShader()->ID, "uOffset");
 	GLint zoomLoc = glGetUniformLocation(this->square->getShader()->ID, "uZoom");
-
+	GLint tex0Loc = glGetUniformLocation(this->square->getShader()->ID, "tex0");
+	
+	glUniform1i(tex0Loc, 0);
+	
 	if (!this->mobile)
 		glUniform1f(zoomLoc, 1.0);
 	else

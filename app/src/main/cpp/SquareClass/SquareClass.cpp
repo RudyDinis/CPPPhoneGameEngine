@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:23 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 17:20:25 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/12 18:06:18 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,6 @@ Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManage
 
 	this->VAO1->Unbind();
 	this->_texture = resourceManager->getTexture(texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, resourceManager->getTexture(texture));
-
-	shaderProgram->Activate();
-	GLuint tex0Uni = glGetUniformLocation(this->shaderProgram->ID, "tex0");
-	glUniform1i(tex0Uni, 0);
 }
 
 Shader *Square::getShader()
@@ -86,10 +80,8 @@ Square::~Square()
 	VAO1->Delete();
 	VBO1->Delete();
 	EBO1->Delete();
-	shaderProgram->Delete();
 
 	delete VAO1;
 	delete VBO1;
 	delete EBO1;
-	delete shaderProgram;
 }
