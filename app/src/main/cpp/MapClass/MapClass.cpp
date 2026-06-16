@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 17:52:11 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 15:46:59 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 18:44:57 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,8 +238,26 @@ void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceMana
 	float originX = 1000.0f;
 	float originY = 160.0f;
 
-	float scale = 0.15f;
+	for (auto &square : this->greedy)
+	{
 
+		float sx = originX + (square.x - square.y) * (stepX);
+		float sy = originY + (square.x + square.y) * (stepY);
+
+		Object *squared;
+
+		std::string id = std::to_string(square.x) + ":" + std::to_string(square.y);
+		if (square.type == 'w')
+			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "water", "default", true, resourceManager, (float)square.w, (float)square.h);
+		if (square.type == 's')
+			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "sand", "default", true, resourceManager, (float)square.w, (float)square.h);
+		if (square.type == 'g')
+			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "grass", "default", true, resourceManager, (float)square.w, (float)square.h);
+
+			scene->addObject(squared);
+	}
+
+	/*
 	for (int row = 0; row < 30; row++)
 	{
 		for (int col = 0; col < 30; col++)
@@ -247,9 +265,6 @@ void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceMana
 			std::string id = std::to_string(col) + ":" + std::to_string(row);
 			float sx = originX + (col - row) * (stepX);
 			float sy = originY + (col + row) * (stepY);
-
-			float v = this->perlin(row * scale, col * scale);
-			int c = (int)((v + 1.0f) * 4.5f + 0.5f);
 
 			Object *square;
 
@@ -262,7 +277,7 @@ void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceMana
 
 			scene->addObject(square);
 		}
-	}
+	}*/
 }
 
 Map::~Map()

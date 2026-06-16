@@ -6,15 +6,15 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 12:52:23 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 18:13:49 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ObjectClass.hpp"
 
-Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetManager *mgr, Screen *screen, const char *texture, const char *shader, bool mobile, ResourceManager *resourceManager)
+Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetManager *mgr, Screen *screen, const char *texture, const char *shader, bool mobile, ResourceManager *resourceManager, float uRepeatX, float uRepeatY)
 {
-	this->square = new Square(x1, x2, y1, y2, {255, 0, 0, 255}, mgr, screen, resourceManager, texture, shader);
+	this->square = new Square(x1, x2, y1, y2, {255, 0, 0, 255}, mgr, screen, resourceManager, texture, shader, uRepeatX, uRepeatY);
 	this->x1 = x1;
 	this->x2 = x2;
 	this->y1 = y1;

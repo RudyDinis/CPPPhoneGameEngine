@@ -6,15 +6,19 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:23 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 18:06:18 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 18:32:49 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SquareClass.hpp"
 #include "../libs/stb_image.h"
 
-Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager, const char *texture, const char *shader)
+Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager, const char *texture, const char *shader, float uRepeatX, float uRepeatY)
 {
+
+	float tileW = 200.0f;
+	float tileH = tileW * (1023.0f / 1024.0f);
+	float roofH = tileW * (593.0f / 1024.0f);
 
 	float left = (x1 / (float)screen->width()) * 2.0f - 1.0f;
 	float right = (x2 / (float)screen->width()) * 2.0f - 1.0f;
@@ -26,11 +30,14 @@ Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManage
 	float b = rgba.b / 255.0f;
 	float a = rgba.a / 255.0f;
 
+	float uvRepeatX = uRepeatX;
+	float uvRepeatY = uRepeatY;
+
 	GLfloat vertices[] = {
 		left, bottom, 0.0f, r, g, b, a, 0.0f, 0.0f,
-		right, bottom, 0.0f, r, g, b, a, 1.0f, 0.0f,
-		right, top, 0.0f, r, g, b, a, 1.0f, 1.0f,
-		left, top, 0.0f, r, g, b, a, 0.0f, 1.0f};
+		right, bottom, 0.0f, r, g, b, a, uvRepeatX, 0.0f,
+		right, top, 0.0f, r, g, b, a, uvRepeatX, uvRepeatY,
+		left, top, 0.0f, r, g, b, a, 0.0f, uvRepeatY};
 
 	GLuint indices[] = {
 		0, 1, 2, // triangle 1
