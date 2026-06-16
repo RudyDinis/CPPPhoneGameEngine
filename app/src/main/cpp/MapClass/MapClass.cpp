@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 17:52:11 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 12:50:43 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 15:46:59 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,156 @@ float Map::perlin(float x, float y)
 	return value;
 }
 
-void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
+void Map::generateMap()
+{
+	float scale = 0.15f;
+
+	for (int row = 0; row < 30; row++)
+	{
+		for (int col = 0; col < 30; col++)
+		{
+			float v = perlin(row * scale, col * scale);
+			int c = (int)((v + 1.0f) * 4.5f + 0.5f);
+
+			if (c < 3)
+				this->map[row][col] = 'w';
+			else if (c == 3)
+				this->map[row][col] = 's';
+			else
+				this->map[row][col] = 'g';
+		}
+	}
+}
+
+void Map::printMap()
+{
+	__android_log_print(ANDROID_LOG_INFO, "DEBUG MAP", "------------------------------");
+
+	for (int row = 0; row < 30; row++)
+	{
+		std::string line = "";
+		for (int col = 0; col < 30; col++)
+		{
+			line += this->map[row][col];
+		}
+		__android_log_print(ANDROID_LOG_INFO, "DEBUG MAP", "%s", line.c_str());
+	}
+}
+
+/*TEMP A SUPR*/
+void Map::printGreedy()
+{
+	__android_log_print(ANDROID_LOG_INFO, "DEBUG GREEDY", "-------------------");
+
+	int **tempPrint = new int *[this->size];
+	for (int i = 0; i < this->size; i++)
+	{
+		tempPrint[i] = new int[this->size];
+		for (int j = 0; j < this->size; j++)
+			tempPrint[i][j] = -1;
+	}
+
+	// draw rectangles (ONLY ID)
+	for (size_t i = 0; i < this->greedy.size(); i++)
+	{
+		GreedyData &g = this->greedy[i];
+
+		for (int y = g.y; y < g.y + g.h; y++)
+		{
+			for (int x = g.x; x < g.x + g.w; x++)
+			{
+				if (y >= 0 && y < this->size && x >= 0 && x < this->size)
+					tempPrint[y][x] = g.id;
+			}
+		}
+	}
+
+	// print (ID only)
+	for (int y = 0; y < this->size; y++)
+	{
+		std::string line = "";
+		for (int x = 0; x < this->size; x++)
+		{
+			if (tempPrint[y][x] == -1)
+				line += '.';
+			else
+				line += (char)('0' + (tempPrint[y][x] % 10));
+		}
+
+		__android_log_print(ANDROID_LOG_INFO, "DEBUG GREEDY", "%s", line.c_str());
+	}
+
+	// cleanup
+	for (int i = 0; i < this->size; i++)
+		delete[] tempPrint[i];
+	delete[] tempPrint;
+}
+
+void Map::greedyMeshing()
+{
+	char **temp = new char *[this->size];
+	for (int i = 0; i < this->size; i++)
+	{
+		temp[i] = new char[this->size];
+		for (int j = 0; j < this->size; j++)
+			temp[i][j] = this->map[i][j];
+	}
+
+	// GREEDY
+	int id = 0;
+	char type;
+
+	for (int y = 0; y < this->size; y++)
+	{
+		for (int x = 0; x < this->size; x++)
+		{
+
+			if (temp[y][x] == '0')
+				continue;
+
+			type = temp[y][x];
+
+			int w = 0;
+			while (x + w < this->size && temp[y][x + w] == type)
+				w++;
+
+			bool stop = false;
+			int h = 0;
+			while (y + h < this->size && !stop)
+			{
+				for (int x3 = x; x3 < x + w; x3++)
+				{
+					if (temp[y + h][x3] != type)
+					{
+						stop = true;
+						break;
+					}
+				}
+
+				if (!stop)
+					h++;
+			}
+
+			this->greedy.push_back({id++, type, x, y, w, h});
+
+			for (int y1 = y; y1 < y + h; y1++)
+			{
+				for (int x1 = x; x1 < x + w; x1++)
+				{
+					temp[y1][x1] = '0';
+				}
+			}
+		}
+	}
+
+	// CLEAR
+
+	for (int i = 0; i < this->size; i++)
+		delete[] temp[i];
+	delete[] temp;
+}
+
+void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
 {
 	resourceManager->loadTextures(mgr, "grass", "textures/ground/grass.png");
 	resourceManager->loadTextures(mgr, "sand", "textures/ground/sand.png");
@@ -95,14 +244,15 @@ void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, Resource
 	{
 		for (int col = 0; col < 30; col++)
 		{
+			std::string id = std::to_string(col) + ":" + std::to_string(row);
 			float sx = originX + (col - row) * (stepX);
 			float sy = originY + (col + row) * (stepY);
 
-			std::string id = std::to_string(col) + ":" + std::to_string(row);
-			float v = perlin(row * scale, col * scale);
+			float v = this->perlin(row * scale, col * scale);
 			int c = (int)((v + 1.0f) * 4.5f + 0.5f);
+
 			Object *square;
-			
+
 			if (c < 3)
 				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "water", "default", true, resourceManager);
 			else if (c == 3)
