@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 18:07:37 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 12:52:23 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void Object::Show(float offset_x, float offset_y, float x, float y, float zoom)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->square->getTexture());
 	this->square->getVAO()->Bind();
+
+	
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
