@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 17:52:11 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 18:44:57 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 18:52:19 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ float Map::perlin(float x, float y)
 	return value;
 }
 
-void Map::generateMap()
+/*void Map::generateMap()
 {
 	float scale = 0.15f;
 
@@ -92,7 +92,7 @@ void Map::generateMap()
 				this->map[row][col] = 'g';
 		}
 	}
-}
+}*/
 
 void Map::printMap()
 {
@@ -220,6 +220,48 @@ void Map::greedyMeshing()
 	for (int i = 0; i < this->size; i++)
 		delete[] temp[i];
 	delete[] temp;
+}
+
+void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
+{
+	resourceManager->loadTextures(mgr, "grass", "textures/ground/grass.png");
+	resourceManager->loadTextures(mgr, "sand", "textures/ground/sand.png");
+	resourceManager->loadTextures(mgr, "water", "textures/ground/water.png");
+
+	float tileW = 200.0f;
+	float tileH = tileW * (1023.0f / 1024.0f);
+	float roofH = tileW * (593.0f / 1024.0f);
+
+	float stepX = tileW / 2.38f;
+	float stepY = roofH / 2.38f;
+
+	float originX = 1000.0f;
+	float originY = 160.0f;
+
+	float scale = 0.15f;
+
+	for (int row = 0; row < 30; row++)
+	{
+		for (int col = 0; col < 30; col++)
+		{
+			float sx = originX + (col - row) * (stepX);
+			float sy = originY + (col + row) * (stepY);
+
+			std::string id = std::to_string(col) + ":" + std::to_string(row);
+			float v = perlin(row * scale, col * scale);
+			int c = (int)((v + 1.0f) * 4.5f + 0.5f);
+			Object *square;
+			
+			if (c < 3)
+				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "water", "default", true, resourceManager);
+			else if (c == 3)
+				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "sand", "default", true, resourceManager);
+			else
+				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "grass", "default", true, resourceManager);
+
+			scene->addObject(square);
+		}
+	}
 }
 
 void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)

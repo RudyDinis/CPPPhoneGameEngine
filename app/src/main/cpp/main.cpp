@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 19:07:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 17:15:32 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 20:51:11 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ Scene *selected_scene = nullptr;
 HomeScene *homeScene = nullptr;
 GameScene *gameScene = nullptr;
 ResourceManager *resourceManager = new ResourceManager();
-
 
 static void handle_app_cmd(struct android_app *app, int32_t cmd)
 {
@@ -216,6 +215,19 @@ void android_main(struct android_app *app)
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			selected_scene->render();
+			static int fps = 0;
+			static auto last = std::chrono::steady_clock::now();
+
+			fps++;
+
+			auto now = std::chrono::steady_clock::now();
+
+			if (std::chrono::duration_cast<std::chrono::seconds>(now - last).count() >= 1)
+			{
+				__android_log_print(ANDROID_LOG_INFO, "DEBUG FPS", "%d", fps);
+				fps = 0;
+				last = now;
+			}
 
 			eglSwapBuffers(screen.getDisplay(), surface);
 		}

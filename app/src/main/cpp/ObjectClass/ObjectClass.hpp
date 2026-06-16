@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:14 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 18:13:45 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 21:03:57 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ private:
 	int x2f;
 	int y1f;
 	int y2f;
+
+	GLint offsetLoc;
+	GLint zoomLoc;
+	GLint tex0Loc;
+	
 	bool visible;
 	std::string name;
 	Screen *screen;

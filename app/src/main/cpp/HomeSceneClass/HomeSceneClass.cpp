@@ -6,14 +6,14 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:15:16 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 17:22:09 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 20:59:37 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HomeSceneClass.hpp"
 
 HomeScene::HomeScene(std::string name, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
-	: Scene(screen), name(name), mgr(mgr), screen(screen)
+	: Scene(screen, resourceManager), name(name), mgr(mgr), screen(screen)
 {
 	resourceManager->loadTextures(mgr, "coin", "textures/coin.png");
 		

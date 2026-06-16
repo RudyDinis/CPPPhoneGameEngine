@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 13:58:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 14:37:34 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 18:53:07 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ public:
 	vec2 randomGradient(int ix, int iy);
 	float dotGridGradient(int ix, int iy, float x, float y);
 	float perlin(float x, float y);
-	void generateMap();
+	void generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager);
 	void greedyMeshing();
 	void printGreedy();
 	void printMap();

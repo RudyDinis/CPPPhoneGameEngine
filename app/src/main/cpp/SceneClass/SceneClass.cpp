@@ -6,15 +6,16 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:44 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 13:26:28 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 21:04:58 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "SceneClass.hpp"
 
-Scene::Scene(Screen *screen)
-	: screen(screen), text(new Text()), camera(new Camera())
+Scene::Scene(Screen *screen, ResourceManager *resourceManager)
+	: screen(screen), text(new Text()), camera(new Camera()), resourceManager(resourceManager)
 {
+	this->tex0Loc = glGetUniformLocation(this->resourceManager->getShader("default")->ID, "tex0");
 }
 
 void Scene::addObject(Object *obj)
@@ -52,6 +53,9 @@ void Scene::render()
 	float ox = *this->camera->getOffset_x() / this->screen->width() * 2.0f;
 	float oy = *this->camera->getOffset_y() / this->screen->height() * 2.0f;
 
+	this->resourceManager->getShader("default")->Activate();
+	glUniform1i(this->tex0Loc, 0);
+	
 	for (auto &object : this->Objects)
 	{
 		object->Show(ox, oy, *this->camera->getOffset_x(), *this->camera->getOffset_y(), *this->camera->getZoom());

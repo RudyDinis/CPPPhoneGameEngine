@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:40 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 15:49:52 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 21:01:09 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "../TextClass/TextClass.hpp"
 #include "../ScreenClass/ScreenClass.hpp"
 #include "../CameraClass/CameraClass.hpp"
+#include "../ResourceManagerClass/ResourceManager.hpp"
 
 typedef struct s_text_value
 {
@@ -37,12 +38,14 @@ private:
 	Text * text;
 	std::map<std::string, s_text_value> TextData;
 	Screen *screen;
+	ResourceManager *resourceManager;
+	GLuint tex0Loc;
 protected:
 	Camera *camera;
 	bool canMoove = false;
 	
 public:
-	Scene(Screen *screen);
+	Scene(Screen *screen, ResourceManager *);
 	void addObject(Object *);
 	std::vector<Object *> getObject();
 

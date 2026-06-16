@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 18:13:49 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/16 21:03:46 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,21 @@ Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetM
 	this->name = name;
 	this->mobile = mobile;
 	this->screen = screen;
+	this->offsetLoc = glGetUniformLocation(this->square->getShader()->ID, "uOffset");
+	this->zoomLoc = glGetUniformLocation(this->square->getShader()->ID, "uZoom");
+	this->tex0Loc = glGetUniformLocation(this->square->getShader()->ID, "tex0");
 }
 
 void Object::Show(float offset_x, float offset_y, float x, float y, float zoom)
-{
-	this->square->getShader()->Activate();
-
-	GLint offsetLoc = glGetUniformLocation(this->square->getShader()->ID, "uOffset");
-	GLint zoomLoc = glGetUniformLocation(this->square->getShader()->ID, "uZoom");
-	GLint tex0Loc = glGetUniformLocation(this->square->getShader()->ID, "tex0");
-	
-	glUniform1i(tex0Loc, 0);
-	
+{;	
 	if (!this->mobile)
-		glUniform1f(zoomLoc, 1.0);
+		glUniform1f(this->zoomLoc, 1.0);
 	else
-		glUniform1f(zoomLoc, zoom);
+		glUniform1f(this->zoomLoc, zoom);
 
 	if (this->mobile)
 	{
-		glUniform2f(offsetLoc, offset_x, offset_y);
+		glUniform2f(this->offsetLoc, offset_x, offset_y);
 		float ndcX1 = (this->x1 / (float)screen->width()) * 2.0f - 1.0f;
 		float ndcX2 = (this->x2 / (float)screen->width()) * 2.0f - 1.0f;
 		float ndcY1 = 1.0f - (this->y1 / (float)screen->height()) * 2.0f;
@@ -60,7 +55,7 @@ void Object::Show(float offset_x, float offset_y, float x, float y, float zoom)
 	}
 	else
 	{
-		glUniform2f(offsetLoc, 0.0f, 0.0f);
+		glUniform2f(this->offsetLoc, 0.0f, 0.0f);
 		this->x1f = this->x1 + 0.0;
 		this->x2f = this->x2 + 0.0;
 		this->y1f = this->y1 + 0.0;
