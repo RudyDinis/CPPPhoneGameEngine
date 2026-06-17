@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 13:58:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/17 18:06:25 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 19:46:12 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ public:
 	float perlin(float x, float y);
 	void generateMap(Screen *screen);
 	TileMap *getTileMap();
-	void greedyMeshing();
-	void printGreedy();
 	void printMap();
 	~Map();
 };
