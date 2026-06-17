@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:06:40 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 21:01:09 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 18:40:26 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,8 @@ public:
 
 	Camera *getCamera();
 	
-	void render();
-	~Scene();
+	virtual void render();
+	virtual ~Scene();
 };
 
 

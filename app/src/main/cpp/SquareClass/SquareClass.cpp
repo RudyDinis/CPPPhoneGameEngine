@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 13:18:23 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 18:32:49 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 16:49:45 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ Square::Square(float x1, float x2, float y1, float y2, s_rgba rgba, AAssetManage
 
 	this->VAO1->Unbind();
 	this->_texture = resourceManager->getTexture(texture);
+	if (!this->_texture)
+		throw std::runtime_error("Texture not found");
 }
 
 Shader *Square::getShader()

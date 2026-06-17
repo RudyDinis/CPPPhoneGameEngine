@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/10 11:07:03 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/12 16:45:52 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 18:38:58 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ private:
 	ResourceManager *resourceManager;
 public:
 	GameScene(std::string, AAssetManager*, Screen *, ResourceManager *resourceManager);
+	void render() override;
 	void load();
 	~GameScene();
 };

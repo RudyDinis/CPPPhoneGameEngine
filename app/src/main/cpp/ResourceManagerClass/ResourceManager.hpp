@@ -3,6 +3,7 @@
 
 #include "../Shader/ShaderClass.hpp"
 #include <android/asset_manager.h>
+#include <android/log.h>
 #include <map>
 #include <string>
 

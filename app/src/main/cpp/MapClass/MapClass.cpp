@@ -6,14 +6,20 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/12 17:52:11 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 18:52:19 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 18:06:29 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MapClass.hpp"
 
-Map::Map(/* args */)
+Map::Map(ResourceManager *resourceManager, AAssetManager *mgr)
+	: tilemap(new TileMap(resourceManager, mgr))
 {
+}
+
+TileMap *Map::getTileMap()
+{
+	return this->tilemap;
 }
 
 vec2 Map::randomGradient(int ix, int iy)
@@ -73,7 +79,7 @@ float Map::perlin(float x, float y)
 	return value;
 }
 
-/*void Map::generateMap()
+void Map::generateMap(Screen *screen)
 {
 	float scale = 0.15f;
 
@@ -92,7 +98,8 @@ float Map::perlin(float x, float y)
 				this->map[row][col] = 'g';
 		}
 	}
-}*/
+	this->tilemap->generate(this->map, this->size, this->size, screen);
+}
 
 void Map::printMap()
 {
@@ -222,11 +229,9 @@ void Map::greedyMeshing()
 	delete[] temp;
 }
 
-void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
+/*void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
 {
-	resourceManager->loadTextures(mgr, "grass", "textures/ground/grass.png");
-	resourceManager->loadTextures(mgr, "sand", "textures/ground/sand.png");
-	resourceManager->loadTextures(mgr, "water", "textures/ground/water.png");
+	resourceManager->loadTextures(mgr, "groundAtlas", "textures/ground/groundAtlas.png");
 
 	float tileW = 200.0f;
 	float tileH = tileW * (1023.0f / 1024.0f);
@@ -244,84 +249,13 @@ void Map::generateMap(Scene *scene, AAssetManager *mgr, Screen *screen, Resource
 	{
 		for (int col = 0; col < 30; col++)
 		{
-			float sx = originX + (col - row) * (stepX);
-			float sy = originY + (col + row) * (stepY);
-
-			std::string id = std::to_string(col) + ":" + std::to_string(row);
 			float v = perlin(row * scale, col * scale);
-			int c = (int)((v + 1.0f) * 4.5f + 0.5f);
-			Object *square;
-			
-			if (c < 3)
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "water", "default", true, resourceManager);
-			else if (c == 3)
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "sand", "default", true, resourceManager);
-			else
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "grass", "default", true, resourceManager);
 
-			scene->addObject(square);
 		}
 	}
-}
-
-void Map::drawMap(Scene *scene, AAssetManager *mgr, Screen *screen, ResourceManager *resourceManager)
-{
-	resourceManager->loadTextures(mgr, "grass", "textures/ground/grass.png");
-	resourceManager->loadTextures(mgr, "sand", "textures/ground/sand.png");
-	resourceManager->loadTextures(mgr, "water", "textures/ground/water.png");
-
-	float tileW = 200.0f;
-	float tileH = tileW * (1023.0f / 1024.0f);
-	float roofH = tileW * (593.0f / 1024.0f);
-
-	float stepX = tileW / 2.38f;
-	float stepY = roofH / 2.38f;
-
-	float originX = 1000.0f;
-	float originY = 160.0f;
-
-	for (auto &square : this->greedy)
-	{
-
-		float sx = originX + (square.x - square.y) * (stepX);
-		float sy = originY + (square.x + square.y) * (stepY);
-
-		Object *squared;
-
-		std::string id = std::to_string(square.x) + ":" + std::to_string(square.y);
-		if (square.type == 'w')
-			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "water", "default", true, resourceManager, (float)square.w, (float)square.h);
-		if (square.type == 's')
-			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "sand", "default", true, resourceManager, (float)square.w, (float)square.h);
-		if (square.type == 'g')
-			squared = new Object(id, sx, sx + (tileW * square.w), sy, sy + (tileH * square.h), mgr, screen, "grass", "default", true, resourceManager, (float)square.w, (float)square.h);
-
-			scene->addObject(squared);
-	}
-
-	/*
-	for (int row = 0; row < 30; row++)
-	{
-		for (int col = 0; col < 30; col++)
-		{
-			std::string id = std::to_string(col) + ":" + std::to_string(row);
-			float sx = originX + (col - row) * (stepX);
-			float sy = originY + (col + row) * (stepY);
-
-			Object *square;
-
-			if (c < 3)
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "water", "default", true, resourceManager);
-			else if (c == 3)
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "sand", "default", true, resourceManager);
-			else
-				square = new Object(id, sx, sx + tileW, sy, sy + tileH, mgr, screen, "grass", "default", true, resourceManager);
-
-			scene->addObject(square);
-		}
-	}*/
-}
+}*/
 
 Map::~Map()
 {
+	delete tilemap;
 }

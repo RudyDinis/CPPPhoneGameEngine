@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:59:04 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 21:03:46 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 16:54:21 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ Object::Object(std::string name, float x1, float x2, float y1, float y2, AAssetM
 }
 
 void Object::Show(float offset_x, float offset_y, float x, float y, float zoom)
-{;	
+{
+	this->square->getShader()->Activate();
 	if (!this->mobile)
 		glUniform1f(this->zoomLoc, 1.0);
 	else

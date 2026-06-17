@@ -6,7 +6,7 @@
 /*   By: rdinis <rdinis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 19:07:12 by rdinis            #+#    #+#             */
-/*   Updated: 2026/06/16 20:51:11 by rdinis           ###   ########.fr       */
+/*   Updated: 2026/06/17 18:21:57 by rdinis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,6 @@ static int32_t handle_input(struct android_app *app, AInputEvent *event)
 void android_main(struct android_app *app)
 {
 	AAssetManager *mgr = app->activity->assetManager;
-
 	Screen screen(app);
 
 	float aspect = 0.0;
@@ -195,7 +194,13 @@ void android_main(struct android_app *app)
 				eglMakeCurrent(screen.getDisplay(), surface, surface, screen.getContext());
 
 				glViewport(0, 0, screen.width(), screen.height());
+
 				resourceManager->loadShader(mgr, "default", "shaders/default.vert", "shaders/default.frag");
+				resourceManager->loadShader(mgr, "tileMap", "shaders/tileMap.vert", "shaders/tileMap.frag");
+
+				resourceManager->loadTextures(mgr, "groundAtlas", "textures/ground/groundAtlas.png");
+
+				
 				homeScene = new HomeScene("HomeScene", mgr, &screen, resourceManager);
 				gameScene = new GameScene("gameScene", mgr, &screen, resourceManager);
 
